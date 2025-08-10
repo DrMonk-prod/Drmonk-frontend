@@ -1,10 +1,8 @@
 package com.finddr.entity;
 
 import com.finddr.entity.type.AppointmentStatus;
-import com.finddr.entity.type.PaymentStatus;
 import com.finddr.entity.type.RoleType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -31,7 +29,6 @@ public class Appointment extends BaseEntity {
   private Clinic clinic;
 
   @NotNull(message = "Appointment time cannot be null")
-  @Future(message = "Appointment must be in the future")
   @Column(name = "appointment_time", nullable = false)
   private LocalDateTime appointmentTime;
 
@@ -42,6 +39,9 @@ public class Appointment extends BaseEntity {
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "payment_id",nullable = false)
   private Payment payment;
+
+  @OneToOne(mappedBy = "appointment",cascade = CascadeType.ALL)
+  private Review review;
 
   @Size(max = 500, message = "Reason for visit should be at most 500 characters")
   @Column(name = "reason_for_visit", length = 500)

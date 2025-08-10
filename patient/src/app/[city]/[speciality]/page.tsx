@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MapPin,
   Star,
@@ -20,6 +20,11 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
+import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useRouter } from "next/navigation";
+import { getDoctorBySpecialityAndCity } from "@/lib/appointmentApi";
 
 interface Doctor {
   id: number;
@@ -137,8 +142,48 @@ function ThemeToggle() {
   );
 }
 
-export default function DoctorListingPage() {
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor>(doctors[0]);
+type DoctorListingPageProps = {
+  params: {
+    city: string,
+    speciality: string,
+  }
+}
+
+export default function DoctorListingPage({ params }: DoctorListingPageProps) {
+
+  const router = useRouter();
+  const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [doctors, setDoctors] = useState<Doctor[] | []>([]);
+  const { selectedCity } = useSelector((state: RootState) => state.city);
+
+  console.log("Selected of City:", selectedCity);
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      toast.info("Geolocation is not supported by your browser.");
+      setLocation({ lat: selectedCity.latitude, lon: selectedCity.longitude });
+    }
+
+    const fetchDoctorBySpecialityAndCity = async () => {
+      const { speciality } = params;
+
+      if (speciality.length < 2) {
+        router.push("/oops?code=Invalid_doctor_slug");
+        return;
+      }
+
+      try {
+        const fetchedDoctors: Doctor[] = await getDoctorBySpecialityAndCity(speciality, selectedCity.label, selectedCity.latitude, selectedCity.longitude);
+        setDoctors(fetchedDoctors);
+      } catch (error) {
+        console.error("Failed to fetch doctor details", error);
+        router.push("/oops?code=Fetch_error");
+      }
+    };
+
+    fetchDoctorBySpecialityAndCity();
+  }, [params, router]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -194,11 +239,10 @@ export default function DoctorListingPage() {
             {doctors.map((doctor) => (
               <Card
                 key={doctor.id}
-                className={`my-3 group cursor-pointer transition-all duration-200 hover:shadow-lg border-border/60 ${
-                  selectedDoctor.id === doctor.id
-                    ? "ring-2 ring-primary/20 shadow-lg bg-accent/30"
-                    : "hover:border-border"
-                }`}
+                className={`my-3 group cursor-pointer transition-all duration-200 hover:shadow-lg border-border/60 ${selectedDoctor.id === doctor.id
+                  ? "ring-2 ring-primary/20 shadow-lg bg-accent/30"
+                  : "hover:border-border"
+                  }`}
                 onClick={() => setSelectedDoctor(doctor)}
               >
                 <CardContent className="p-8">
@@ -249,11 +293,10 @@ export default function DoctorListingPage() {
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
-                                className={`h-4 w-4 ${
-                                  i < Math.floor(doctor.rating)
-                                    ? "fill-amber-400 text-amber-400"
-                                    : "text-muted-foreground/30"
-                                }`}
+                                className={`h-4 w-4 ${i < Math.floor(doctor.rating)
+                                  ? "fill-amber-400 text-amber-400"
+                                  : "text-muted-foreground/30"
+                                  }`}
                               />
                             ))}
                           </div>
@@ -320,7 +363,7 @@ export default function DoctorListingPage() {
                     Doctor Location
                   </h2>
                   <p className="text-muted-foreground">
-                    {selectedDoctor.name} • {selectedDoctor.location}
+                    {/* {selectedDoctor.name} • {selectedDoctor.location} */}
                   </p>
                 </div>
 
@@ -331,12 +374,12 @@ export default function DoctorListingPage() {
                       <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
                         <MapPin className="h-8 w-8 text-primary" />
                       </div>
-                      <div className="space-y-2">
+                      {/* <div className="space-y-2">
                         <h4 className="font-semibold">{selectedDoctor.name}</h4>
                         <p className="text-sm text-muted-foreground max-w-xs">
                           {selectedDoctor.address}
                         </p>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 
@@ -350,7 +393,7 @@ export default function DoctorListingPage() {
                   </div>
                 </div>
 
-                <div className="p-6 space-y-4">
+                {/* <div className="p-6 space-y-4">
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="flex items-center gap-x-2">
                       <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
@@ -374,7 +417,7 @@ export default function DoctorListingPage() {
                   <Button className="w-full h-12 mt-3 font-medium">
                     Get Directions
                   </Button>
-                </div>
+                </div> */}
               </Card>
             </div>
           </div>

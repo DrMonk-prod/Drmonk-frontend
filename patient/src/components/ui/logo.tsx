@@ -9,7 +9,7 @@ function Logo() {
         <div className="delay-2000 absolute left-5 top-4 h-8 w-8 animate-blob rounded-full bg-rose-500 opacity-90 blur-xl"></div>
 
         <Link href="/" className="flex items-center font-chillax">
-          <div className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+          <div className="text-2xl font-bold text-gray-800 dark:text-gray-200 z-20">
             Find <span className="text-indigo-500 dark:text-lime-500">Dr+</span>
           </div>
         </Link>

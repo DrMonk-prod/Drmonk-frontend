@@ -10,8 +10,6 @@ import {
   Building2,
   CheckCircle,
   ArrowLeft,
-  Heart,
-  Share2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,11 +20,8 @@ import { useRouter } from "next/navigation";
 import { getDoctorDetailsById } from "@/lib/appointmentApi";
 import { Doctor } from "@/types/doctor-types";
 import FullScreenLoader from "@/components/FullScreenLoader";
+import SlotPicker from "@/components/Booking/SlotPicker";
 
-interface TimeSlot {
-  time: string;
-  available: boolean;
-}
 
 interface Review {
   id: number;
@@ -37,56 +32,6 @@ interface Review {
   verified: boolean;
 }
 
-// const doctor = {
-//   id: 1,
-//   name: "Dr. Nilesh Kamat",
-//   specialization: "Orthopedist & Joint Replacement Surgeon",
-//   experience: 18,
-//   rating: 4.9,
-//   reviews: 2450,
-//   location: "Pune",
-//   address: "Kamat Orthopedic Clinic, FC Road, Pune",
-//   consultationFee: 1200,
-//   image: "/placeholder.svg?height=200&width=200",
-//   verified: true,
-//   qualifications: [
-//     "MBBS",
-//     "MS - Orthopedics",
-//     "Fellowship in Joint Replacement",
-//   ],
-//   languages: ["English", "Hindi", "Marathi"],
-//   about:
-//     "Dr. Nilesh Kamat is a renowned Orthopedist with over 18 years of experience in treating bone, joint, and muscle disorders. He specializes in joint replacement surgeries and has successfully performed over 3000 surgeries. He is known for his patient-centric approach and use of latest medical technologies.",
-//   services: [
-//     "Joint Replacement Surgery",
-//     "Arthroscopic Surgery",
-//     "Sports Injury Treatment",
-//     "Fracture Treatment",
-//     "Spine Surgery",
-//     "Pediatric Orthopedics",
-//   ],
-//   clinicInfo: {
-//     name: "Kamat Orthopedic Clinic",
-//     address: "Shop No. 15, FC Road, Near Sambhaji Park, Pune - 411004",
-//     phone: "+91 98765 43210",
-//     timings: "Mon-Sat: 9:00 AM - 8:00 PM, Sun: 10:00 AM - 2:00 PM",
-//   },
-// };
-
-// const timeSlots: TimeSlot[] = [
-//   { time: "9:00 AM", available: true },
-//   { time: "9:30 AM", available: false },
-//   { time: "10:00 AM", available: true },
-//   { time: "10:30 AM", available: true },
-//   { time: "11:00 AM", available: false },
-//   { time: "11:30 AM", available: true },
-//   { time: "2:00 PM", available: true },
-//   { time: "2:30 PM", available: true },
-//   { time: "3:00 PM", available: false },
-//   { time: "3:30 PM", available: true },
-//   { time: "4:00 PM", available: true },
-//   { time: "4:30 PM", available: true },
-// ];
 
 const reviews: Review[] = [
   {
@@ -118,20 +63,6 @@ const reviews: Review[] = [
   },
 ];
 
-const WEEK_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-function formatDateLabel(date: Date, index: number) {
-  if (index === 0) return "Today";
-  if (index === 1) return "Tomorrow";
-  const dayName = WEEK_DAYS[date.getDay()];
-  return dayName;
-}
-
-function formatDateValue(date: Date) {
-  return date.toISOString().split("T")[0]; // yyyy-mm-dd
-}
-
-
 interface DoctorPageProps {
   params: {
     city: string;
@@ -142,18 +73,6 @@ interface DoctorPageProps {
 export default function DoctorDetailPage({ params }: DoctorPageProps) {
 
   const router = useRouter();
-  const [selectedDate, setSelectedDate] = useState("Today");
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[] | []>([]);
-
-  const today = new Date();
-  const dates = Array.from({ length: 7 }).map((_, i) => {
-    const d = new Date(today);
-    d.setDate(d.getDate() + i);
-    return d;
-  });
-
 
   const [doctor, setDoctor] = useState<Doctor | null>();
 
@@ -185,7 +104,6 @@ export default function DoctorDetailPage({ params }: DoctorPageProps) {
     fetchDoctor();
   }, [params, router]);
 
-  const dates = ["Today", "Tomorrow", "Day After"];
 
   if (!doctor) {
     return <FullScreenLoader />
@@ -216,7 +134,7 @@ export default function DoctorDetailPage({ params }: DoctorPageProps) {
                   <div className="relative">
                     <Avatar className="h-32 w-32">
                       <AvatarImage
-                        src={doctor.user.profileImg || "/placeholder.svg"}
+                        src={doctor.user.profileImg || "/placeholder.png"}
                         alt={doctor.user.fullName}
                       />
                       <AvatarFallback className="text-2xl font-semibold">
@@ -261,7 +179,6 @@ export default function DoctorDetailPage({ params }: DoctorPageProps) {
                         </div>
                         <span className="font-semibold">{doctor.rating}</span>
                         <span className="text-sm text-muted-foreground">
-                          {/* ({doctor.reviews} reviews) */}
                         </span>
                       </div>
 
@@ -310,27 +227,6 @@ export default function DoctorDetailPage({ params }: DoctorPageProps) {
                     <p className="text-muted-foreground leading-relaxed">
                       {doctor.description}
                     </p>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="services" className="mt-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Services</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {doctor.services.map((service, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center space-x-3 p-3 rounded-lg border"
-                        >
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span className="text-sm">{service}</span>
-                        </div>
-                      ))}
-                    </div> */}
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -453,53 +349,7 @@ export default function DoctorDetailPage({ params }: DoctorPageProps) {
 
                   <hr className="my-2 border-[1] border-gray-300" />
 
-                  <div className="my-3">
-                    <h4 className="font-medium my-3">Select Date</h4>
-                    <div className="grid grid-cols-3 gap-2">
-                      {dates.map((date) => (
-                        <Button
-                          key={date}
-                          variant={
-                            selectedDate === date ? "default" : "outline"
-                          }
-                          size="lg"
-                          onClick={() => setSelectedDate(date)}
-                        >
-                          {date}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="my-3">
-                    <h4 className="font-medium my-3">Available Slots</h4>
-                    <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-                      {timeSlots.map((slot) => (
-                        <Button
-                          key={slot.time}
-                          variant={
-                            selectedTime === slot.time ? "default" : "outline"
-                          }
-                          size="sm"
-                          disabled={!slot.available}
-                          onClick={() => setSelectedTime(slot.time)}
-                          className="text-xs h-10 mt-2"
-                        >
-                          {slot.time}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <Button
-                    className="w-full mt-3"
-                    size="lg"
-                    disabled={!selectedTime}
-                  >
-                    {selectedTime
-                      ? `Book for ${selectedTime}`
-                      : "Select Time Slot"}
-                  </Button>
+                  <SlotPicker doctorId={doctor.id} />
 
                   <div className="text-center">
                     <Button variant="ghost" size="sm">

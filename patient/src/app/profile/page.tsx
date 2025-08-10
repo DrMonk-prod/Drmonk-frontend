@@ -52,7 +52,7 @@ export default function Page() {
       {/* Background accents */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 overflow-clip"
+        className="pointer-events-none absolute inset-0 -z-10 overflow-clip font-poppins"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-cyan-50/70 via-white to-white dark:from-cyan-950/40 dark:via-background dark:to-background" />
         <div className="absolute -top-24 right-[-10%] h-72 w-72 rounded-full bg-cyan-200/40 blur-3xl dark:bg-cyan-900/30" />

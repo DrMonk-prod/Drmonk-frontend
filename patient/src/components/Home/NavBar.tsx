@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import Logo from "@/components/ui/logo";
-import { ChevronDown, LogOut, MapPin, User, User2Icon, UserCircleIcon } from "lucide-react";
+import { ChevronDown, ClipboardPen, LogOut, MapPin, User, User2Icon, UserCircleIcon, UserRoundPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import Link from "next/link";
@@ -79,15 +79,22 @@ function NavBar() {
                   <DropdownMenuContent className="font-medium mt-4 p-2">
                     {/* <DropdownMenuLabel>User</DropdownMenuLabel> */}
                     {/* <DropdownMenuSeparator /> */}
+
+
                     <DropdownMenuItem onClick={() => router.push("/profile")} className="px-4 py-2">
                       <User2Icon size={24} /> Profile
                     </DropdownMenuItem>
+
+                    <DropdownMenuItem onClick={() => router.push("/appointment")} className="px-4 py-2">
+                      <ClipboardPen size={24} /> My appointments
+                    </DropdownMenuItem>
+
                     <DropdownMenuItem
                       onClick={() => {
                         logout(dispatch);
                         router.push("/");
                       }}
-                      className="px-4 py-2"
+                      className="px-4 py-2 hover:bg-rose-500 hover:dark:bg-rose-500 text-gray-100 dark:text-gray-100"
                     >
                       <LogOut size={24} /> Logout
                     </DropdownMenuItem>

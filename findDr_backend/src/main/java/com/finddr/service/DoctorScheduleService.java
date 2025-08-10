@@ -54,8 +54,6 @@ public class DoctorScheduleService {
                         HttpStatus.NOT_FOUND
                 ));
 
-        System.out.println(schedule);
-
         return mapToDto(schedule);
     }
 
@@ -129,14 +127,8 @@ public List<SimpleSlotDto> getDoctorSlotsForDate(Long doctorId, LocalDate forDat
   DayOfWeek dayOfWeek = forDate.getDayOfWeek();
 
   // Fetch doctor's schedule for the day or throw if not found
-  DoctorSchedule schedule = scheduleRepository.findByDoctorIdAndDayOfWeek(doctorId, dayOfWeek)
-          .orElseThrow(() -> new ApiException(
-                  ErrorCode.SCHEDULE_NOT_FOUND,
-                  "Doctor schedule not found for doctorId: " + doctorId + " on " + dayOfWeek,
-                  HttpStatus.NOT_FOUND
-          ));
+  DoctorSchedule schedule = scheduleRepository.findByDoctorIdAndDayOfWeek(doctorId, dayOfWeek).orElse(null);
 
-  // Defensive: If schedule is null, return empty list
   if (schedule == null) {
     return Collections.emptyList();
   }

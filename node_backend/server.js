@@ -3,9 +3,6 @@ const cors = require("cors");
 require("dotenv").config(); // Load environment variables
 
 const paymentRoutes = require("./src/routes/paymentRoutes");
-const {
-  validatePaymentVerification,
-} = require("razorpay/dist/utils/razorpay-utils");
 
 const app = express();
 
@@ -15,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- API Routes ---
-app.use("/api/payment", validatePaymentVerification, paymentRoutes);
+app.use("/api/payment", paymentRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

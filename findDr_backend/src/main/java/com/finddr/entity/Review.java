@@ -36,7 +36,7 @@ public class Review extends BaseEntity {
   @Check(constraints = "rating >= 1 AND rating <= 5")
   private int rating;
 
-  @Size(max = 1000, message = "Comment cannot exceed 1000 characters")
-  @Column(name = "comment", length = 500)
+  @Size(max = 300, message = "Comment cannot exceed 1000 characters")
+  @Column(name = "comment", length = 300)
   private String comment;
 }
