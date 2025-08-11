@@ -48,13 +48,11 @@ public class DoctorService {
         doctor.setSpeciality(speciality);
 
         Doctor savedDoctor = doctorRepository.save(doctor);
-//      mapToDoctorResponseDto(savedDoctor)
         return mapper.map(savedDoctor, DoctorResponseDto.class);
     }
 
     public List<DoctorResponseDto> getAllDoctors() {
         List<Doctor> doctors = doctorRepository.findAll();
-//      this::mapToDoctorResponseDto
         return doctors.stream()
                 .map(doctor->mapper.map(doctor,DoctorResponseDto.class))
                 .toList();
@@ -68,7 +66,6 @@ public class DoctorService {
                         HttpStatus.NOT_FOUND
                 ));
 
-//      mapToDoctorResponseDto(doctor)
         return mapper.map(doctor, DoctorResponseDto.class);
     }
 
@@ -77,64 +74,10 @@ public class DoctorService {
     }
 
 
-  public List<DoctorDistanceDto> getDoctorsBySpecialityAndCity(Long specialityId, String city, double lat, double lng, double maxDistance) {
-    List<Object[]> results = doctorRepository.findDoctorsBySpecialityCityDistance(specialityId, city, lat, lng, maxDistance);
+  public List<DoctorDistanceDto> getDoctorsBySpecialityAndCity(String speciality, String city, double lat, double lng, double maxDistance) {
+    List<DoctorDistanceDto> results = doctorRepository.findDoctorsBySpecialityCityDistance(speciality, city, lat, lng, maxDistance);
 
-    return results.stream().map(row -> new DoctorDistanceDto(
-            ((Number) row[0]).longValue(),          // doctorId
-            ((Number) row[1]).intValue(),           // experience
-            ((Number) row[2]).intValue(),           // fees
-            ((Number) row[3]).doubleValue(),        // rating
-            (String) row[4],                        // description
-            ((Number) row[5]).intValue() == 1,      // prime (bit -> boolean)
-            ((Number) row[6]).longValue(),          // specialityId
-            (String) row[7],                        // specialityName
-            (String) row[8],                        // specialityDesc
-            ((Number) row[9]).longValue(),          // clinicId
-            (String) row[10],                       // clinicName
-            (String) row[11],                       // address
-            ((Number) row[12]).doubleValue(),       // latitude
-            ((Number) row[13]).doubleValue(),       // longitude
-            (String) row[14],                       // pincode
-            (String) row[15],                       // cityName
-            ((Number) row[16]).doubleValue()        // distanceKm
-    )).toList();
+    return results;
   }
-
-//    private DoctorResponseDto mapToDoctorResponseDto(Doctor doctor) {
-//        DoctorResponseDto dto = new DoctorResponseDto();
-//
-//        dto.setId(doctor.getId());
-//        dto.setFullName(doctor.getUser().getFullName());
-//        dto.setEmail(doctor.getUser().getEmail());
-//        dto.setPhoneNumber(doctor.getUser().getPhoneNumber());
-//        dto.setExperience(doctor.getExperience());
-//        dto.setFees(doctor.getFees());
-//        dto.setRating(doctor.getRating());
-//        dto.setPrime(doctor.isPrime());
-//        dto.setDescription(doctor.getDescription());
-//        // Speciality
-//        Speciality speciality = doctor.getSpeciality();
-//        if (speciality != null) {
-//            SpecialityDto specialityDto = new SpecialityDto();
-//            specialityDto.setId(speciality.getId());
-//            specialityDto.setName(speciality.getName());
-//            dto.setSpeciality(specialityDto);
-//        }
-//
-//        // Clinic
-//        Clinic clinic = doctor.getClinic();
-//        if (clinic != null) {
-//            ClinicInfo clinicDto = new ClinicInfo();
-//            clinicDto.setId(clinic.getId());
-//            clinicDto.setName(clinic.getName());
-//            clinicDto.setAddress(clinic.getAddress());
-//            clinicDto.setPincode(clinic.getPincode());
-//            clinicDto.setCityName(clinic.getCity().getName());
-//            dto.setClinic(clinicDto);
-//        }
-//        return dto;
-//    }
-
 
 }

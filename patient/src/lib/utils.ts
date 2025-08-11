@@ -28,3 +28,13 @@ export function convertTo12Hour(isoString: string): string {
     hour12: true
   }).toLowerCase()
 }
+
+
+export function formatDistance(distanceKm: number): string {
+  if (distanceKm < 1) {
+    const meters = Math.round(distanceKm * 1000);
+    return `${meters} m`;
+  } else {
+    return `${distanceKm.toFixed(1)} km`;
+  }
+}

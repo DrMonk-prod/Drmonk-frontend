@@ -48,7 +48,7 @@ public class AuthService {
       );
     }
 
-    if (userDao.existsByPhoneNumber(registerRequestDto.getPhoneNumber())) {
+    if (registerRequestDto.getPhoneNumber()!=null && userDao.existsByPhoneNumber(registerRequestDto.getPhoneNumber())) {
       throw new ApiException(ErrorCode.USER_ALREADY_EXIST, "Phone number already registered", HttpStatus.UNPROCESSABLE_ENTITY);
     }
 

@@ -30,14 +30,14 @@ public class DoctorController {
 
     @GetMapping("/speciality")
     public ResponseEntity<List<DoctorDistanceDto>> getDoctorsBySpecialityAndCity(
-            @RequestParam Long specialityId,
+            @RequestParam String speciality,
             @RequestParam String city,
             @RequestParam double latitude,
             @RequestParam double longitude,
             @RequestParam(defaultValue = "20") double maxDistance
     ){
       List<DoctorDistanceDto> doctors=doctorService.getDoctorsBySpecialityAndCity(
-              specialityId, city, latitude, longitude, maxDistance
+              speciality, city, latitude, longitude, maxDistance
       );
       return ResponseEntity.ok(doctors);
     }

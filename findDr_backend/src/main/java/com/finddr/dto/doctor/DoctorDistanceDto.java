@@ -9,21 +9,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DoctorDistanceDto {
   private Long doctorId;
-  private int experience;
-  private int fees;
-  private double rating;
+  private String doctorName;
+  private String doctorProfileImg;
+  private Integer experience;
+  private Integer fees;
+  private Double rating;
   private String description;
-  private boolean prime;
+  private Boolean prime;
+
   private Long specialityId;
   private String specialityName;
   private String specialityDesc;
+
   private Long clinicId;
   private String clinicName;
   private String address;
-  private double latitude;
-  private double longitude;
+  private Double latitude;
+  private Double longitude;
   private String pincode;
   private String cityName;
-  private double distanceKm;
+
+  private Double distanceKm;
 }
 

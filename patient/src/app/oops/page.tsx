@@ -1,19 +1,20 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sparkles, OctagonAlert } from "lucide-react"
+import { useParams } from "next/navigation"
 
 export const metadata = {
   title: "Findr — Error",
   description: "We ran into an issue",
 }
 
-export default function OopsPage({
-  searchParams,
-}: {
-  searchParams?: { code?: string; message?: string }
+export default async function OopsPage({ searchParams }: {
+  searchParams: Promise<{ code?: string; message?: string }>
 }) {
-  const code = searchParams?.code ?? "ERROR"
-  const message = searchParams?.message ?? "We hit a snag while processing your request."
+  const filters = (await searchParams);;
+  // const params = useParams<{ code?: string; message?: string }>()
+  const code = filters?.code ?? "ERROR"
+  const message = filters?.message ?? "We hit a snag while processing your request."
 
   return (
     <main className="relative mx-auto w-full max-w-5xl px-4 py-24 sm:px-6 md:px-10">
