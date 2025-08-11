@@ -1,11 +1,11 @@
 package com.finddr.dto.appointment;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.finddr.dto.BaseDto;
 import com.finddr.dto.clinic.ClinicInfo;
+import com.finddr.dto.doctor.DoctorInfo;
+import com.finddr.dto.review.ReviewInfo;
 import com.finddr.entity.type.AppointmentStatus;
 import com.finddr.entity.type.RoleType;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,19 +25,7 @@ public class AppointmentDto extends BaseDto {
 
   private DoctorInfo doctor;
   private ClinicInfo clinic;
-
-  @Data
-  public static class DoctorInfo {
-    private Long id;
-    @JsonProperty("name")
-    private String userName;
-    private int fees;
-    @JsonProperty("profileImage")
-    private String userProfileImg;
-    @JsonProperty("speciality")
-    private String specialityName;
-  }
-
+  private ReviewInfo review;
 }
 
 

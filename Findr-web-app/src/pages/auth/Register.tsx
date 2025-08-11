@@ -31,9 +31,9 @@ export default function Register() {
       phoneNumber,
       password,
     };
-    const data = registerDoctor({ ...body, role: "DOCTOR" });
+    const data = await registerDoctor({ ...body, role: "DOCTOR" });
     console.log("Registering doctor:", data);
-    navigate("/auth");
+    navigate("/");
   };
 
   return (

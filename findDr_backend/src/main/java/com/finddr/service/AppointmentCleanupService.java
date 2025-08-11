@@ -21,12 +21,12 @@ public class AppointmentCleanupService {
   private final AppointmentRepository appointmentRepository;
   private final AppointmentService appointmentService;
 
-  @Scheduled(cron = "0 */5 * * * *")
+  @Scheduled(cron = "0 */3 * * * *")
   public void cleanupStalePendingAppointments() {
     log.info("Running scheduled appointment cleanup task...");
 
-    // Define a timeout period (e.g., 30 minutes)
-    LocalDateTime timeoutTime = LocalDateTime.now().minusMinutes(30);
+    // Define a timeout period (e.g., 5 minutes)
+    LocalDateTime timeoutTime = LocalDateTime.now().minusMinutes(3);
 
     // Find all appointments with PENDING status that were created before the timeout
     List<Appointment> staleAppointments = appointmentRepository.findByStatusAndCreatedAtBefore(AppointmentStatus.PENDING, timeoutTime);

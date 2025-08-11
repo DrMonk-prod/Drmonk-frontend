@@ -1,11 +1,12 @@
 package com.finddr.controller;
 
 import com.finddr.dto.appointment.SimpleSlotDto;
+import com.finddr.dto.doctor.DoctorDistanceDto;
 import com.finddr.dto.doctor.DoctorRequestDto;
 import com.finddr.dto.doctor.DoctorResponseDto;
 import com.finddr.dto.doctor.DoctorScheduleDto;
 import com.finddr.service.DoctorScheduleService;
-import com.finddr.service.DoctorServiceImpl;
+import com.finddr.service.DoctorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,12 +20,26 @@ import java.util.List;
 @RequestMapping("/api/doctors")
 @RequiredArgsConstructor
 public class DoctorController {
-    private final DoctorServiceImpl doctorService;
+    private final DoctorService doctorService;
     private final DoctorScheduleService scheduleService;
 
     @GetMapping("/")
     public ResponseEntity<List<DoctorResponseDto>> getAllDoctor() {
         return ResponseEntity.ok(doctorService.getAllDoctors());
+    }
+
+    @GetMapping("/speciality")
+    public ResponseEntity<List<DoctorDistanceDto>> getDoctorsBySpecialityAndCity(
+            @RequestParam Long specialityId,
+            @RequestParam String city,
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(defaultValue = "20") double maxDistance
+    ){
+      List<DoctorDistanceDto> doctors=doctorService.getDoctorsBySpecialityAndCity(
+              specialityId, city, latitude, longitude, maxDistance
+      );
+      return ResponseEntity.ok(doctors);
     }
 
     @PostMapping

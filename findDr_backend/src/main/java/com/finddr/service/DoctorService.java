@@ -1,5 +1,6 @@
 package com.finddr.service;
 
+import com.finddr.dto.doctor.DoctorDistanceDto;
 import com.finddr.dto.doctor.DoctorRequestDto;
 import com.finddr.dto.doctor.DoctorResponseDto;
 import com.finddr.entity.Clinic;
@@ -23,7 +24,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DoctorServiceImpl {
+public class DoctorService {
 
     private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
@@ -74,6 +75,31 @@ public class DoctorServiceImpl {
     public void deleteDoctor(Long id) {
         doctorRepository.deleteById(id);
     }
+
+
+  public List<DoctorDistanceDto> getDoctorsBySpecialityAndCity(Long specialityId, String city, double lat, double lng, double maxDistance) {
+    List<Object[]> results = doctorRepository.findDoctorsBySpecialityCityDistance(specialityId, city, lat, lng, maxDistance);
+
+    return results.stream().map(row -> new DoctorDistanceDto(
+            ((Number) row[0]).longValue(),          // doctorId
+            ((Number) row[1]).intValue(),           // experience
+            ((Number) row[2]).intValue(),           // fees
+            ((Number) row[3]).doubleValue(),        // rating
+            (String) row[4],                        // description
+            ((Number) row[5]).intValue() == 1,      // prime (bit -> boolean)
+            ((Number) row[6]).longValue(),          // specialityId
+            (String) row[7],                        // specialityName
+            (String) row[8],                        // specialityDesc
+            ((Number) row[9]).longValue(),          // clinicId
+            (String) row[10],                       // clinicName
+            (String) row[11],                       // address
+            ((Number) row[12]).doubleValue(),       // latitude
+            ((Number) row[13]).doubleValue(),       // longitude
+            (String) row[14],                       // pincode
+            (String) row[15],                       // cityName
+            ((Number) row[16]).doubleValue()        // distanceKm
+    )).toList();
+  }
 
 //    private DoctorResponseDto mapToDoctorResponseDto(Doctor doctor) {
 //        DoctorResponseDto dto = new DoctorResponseDto();

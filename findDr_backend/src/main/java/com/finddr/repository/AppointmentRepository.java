@@ -30,4 +30,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
           LocalDateTime startOfDay,
           LocalDateTime startOfNextDay
   );
+
 }

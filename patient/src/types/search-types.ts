@@ -2,10 +2,8 @@ export interface City {
   id: number;
   value: string;
   label: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
+  latitude: number;
+  longitude: number;
 }
 
 export type SearchEntity = {

@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "doctors")
 @Data
@@ -47,5 +50,13 @@ public class Doctor extends BaseEntity {
     @Size(max = 500)
     @Column(name = "description", length = 500)
     private String description;
+
+  @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<Review> reviews = new HashSet<>();
+
+  public void addReview(Review review){
+    this.reviews.add(review);
+    review.setDoctor(this);
+  }
 
 }

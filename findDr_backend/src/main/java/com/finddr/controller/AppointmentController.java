@@ -27,12 +27,14 @@ public class AppointmentController {
     return ResponseEntity.ok(appointmentService.initiateAppointment(userDetails, bookAppointmentDto));
   }
 
-  @PostMapping("/{id}/confirm-payment")
+  @PutMapping("/{id}/confirm-payment")
   public ResponseEntity<ApiResponse<AppointmentDto>> confirmAppointmentPayment(@PathVariable Long id, @RequestBody PaymentConfirmationDto paymentConfirmationDto) {
     return ResponseEntity.ok(appointmentService.confirmAppointmentPayment(id,paymentConfirmationDto));
   }
 
-  @DeleteMapping("/cancel/{id}")
+
+
+  @PutMapping("/cancel/{id}")
   @PreAuthorize("hasAnyRole('PATIENT','DOCTOR')")
   public ResponseEntity<ApiResponse<String>> cancelAppointment(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long id,@Valid @RequestBody AppointmentCancellationDto appointmentCancellationDto) {
     appointmentService.cancelAppointment(id,userDetails.getUser().getRole(),appointmentCancellationDto);

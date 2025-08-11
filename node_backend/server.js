@@ -6,10 +6,6 @@ require("dotenv").config(); // Load environment variables
 const emailRoutes = require("./src/routes/emailRoutes");
 const paymentRoutes = require("./src/routes/paymentRoutes");
 
-const {
-  validatePaymentVerification,
-} = require("razorpay/dist/utils/razorpay-utils");
-
 const app = express();
 
 // --- Middleware ---
@@ -18,8 +14,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- API Routes ---
-app.use("/api/payment", validatePaymentVerification, paymentRoutes);
+
+app.use("/api/payment", paymentRoutes);
 app.use("/api/email",emailRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

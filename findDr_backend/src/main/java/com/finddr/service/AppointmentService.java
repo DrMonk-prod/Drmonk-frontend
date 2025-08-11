@@ -55,7 +55,6 @@ public class AppointmentService {
     if(user==null)
       throw new ApiException(ErrorCode.USER_NOT_FOUND, "User not found", HttpStatus.UNAUTHORIZED);
 
-
     LocalDateTime combinedDateTime=LocalDateTime.of(bookAppointmentDto.getDate(), bookAppointmentDto.getTime());
     validateTimeSlot(doctor,combinedDateTime);
 
@@ -96,8 +95,6 @@ public class AppointmentService {
       appointment.setStatus(AppointmentStatus.SCHEDULED);
       appointment.getPayment().setPaymentStatus(PaymentStatus.COMPLETED);
       appointmentRepository.save(appointment);
-      // email costomer about their appointment
-      // ... Trigger confirmation notifications ...
     }
 
     return ApiResponse.of("Appointment confirmed successfully!",mapper.map(appointment, AppointmentDto.class));

@@ -2,6 +2,7 @@ const express = require("express");
 const crypto = require("crypto");
 const axios = require("axios");
 const razorpayClient = require("../config/razorpay");
+const validateRazorpayPayment = require("../utils/validateRazorpay");
 
 const router = express.Router();
 
@@ -37,9 +38,27 @@ router.post("/create-order", async (req, res) => {
 
 // --- Endpoint 2: Verify the Payment ---
 router.post("/verify-payment", async (req, res) => {
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    appointmentId,
+  } = req.body;
+
   try {
-    // payment verification is done by middleware validate
-    const { appointmentId } = req.body;
+    // 1. Validate the payment signature
+    const isValid = validateRazorpayPayment(
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature
+    );
+
+    if (!isValid) {
+      return res.status(400).json({
+        status: "failure",
+        message: "Payment verification failed. Invalid signature.",
+      });
+    }
 
     // 2. If signature is verified, notify the Spring Boot backend
     console.log("Payment Verified Successfully. Notifying Spring Boot...");

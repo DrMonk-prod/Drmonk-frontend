@@ -28,14 +28,14 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    const { logout } = useAuth();
+    // const { logout } = useAuth();
     if (error.response) {
       const { status } = error.response;
 
       // 401 Unauthorized: The user is not authenticated.
       if (status === 401) {
         // Clear the token and redirect to login.
-        logout();
+        // logout();
         toast.error("Session expired. Please log in again.");
         redirect("/");
       }
